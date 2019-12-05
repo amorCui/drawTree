@@ -1,0 +1,18 @@
+<html>
+
+    <head>
+        <script src="tree.js"></script>
+    </head>
+    <body onload="draw()">
+        <canvas id ='myCanvas' width="1000" height="800"></canvas>
+    </body>
+    <script>
+        // draw(350,600,120,0);
+        var draw = function(){
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            drawTree(ctx, 550, 400, 60, 0, 10);
+        }
+        
+    </script>
+</html>
