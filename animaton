@@ -1,0 +1,96 @@
+// var drawTree = (ctx, startX, startY, len, angle, branchWidth) =>{
+//     ctx.beginPath();
+//     ctx.save();
+//     ctx.strokeStyle = options.branchColor;
+//     ctx.fillStyle = options.leafColor;
+//     ctx.translate(startX,startY);
+//     ctx.rotate(angle * Math.PI / 180);
+//     ctx.lineWidth = branchWidth;
+//     ctx.moveTo(0,0);
+//     ctx.lineTo(0,-len);
+//     ctx.stroke();
+//     if(len < options.minLine ){
+//         //draw leaf
+//         ctx.beginPath();
+//         if(randomX(1) > 0 ){
+//             ctx.arc(0,-len,10,Math.PI/2,Math.PI);
+//         }else{
+//             ctx.arc(0,-len,10,0,Math.PI/2);
+//         }
+        
+//         ctx.fill();
+
+//         ctx.restore();
+//         return;
+//     }
+
+//     drawTree(ctx, 0, -len, (len + randomX(options.lineRateRand)) * options.lineRate, -options.angelRate + randomX(options.angelRateRand), (branchWidth + randomX(options.branchWidthRateRand)) * options.branchWidthRate);
+//     drawTree(ctx, 0, -len, (len + randomX(options.lineRateRand)) * options.lineRate, options.angelRate + randomX(options.angelRateRand), (branchWidth + randomX(options.branchWidthRateRand)) * options.branchWidthRate);
+
+//     ctx.restore();
+// }
+
+
+
+var drawTree = (ctx, startX, startY, len, angle, branchWidth)=>{
+    requestAnimationFrame(()=>{
+        drawBranch(ctx, startX, startY, len, angle, branchWidth,true, 0);
+    });
+}
+
+var drawBranch = (ctx, startX, startY, len, angle, branchWidth,isStart, currentStart)=>{
+    console.log('angle:',angle);
+    if(isStart){
+        ctx.beginPath();
+        ctx.save();
+        ctx.strokeStyle = options.branchColor;
+        ctx.fillStyle = options.leafColor;
+        ctx.translate(startX, startY);
+        ctx.rotate(angle * Math.PI / 180);
+        ctx.lineWidth = branchWidth;
+        ctx.moveTo(0,0);
+    }
+    if(len < options.minLine ){
+        //draw leaf
+        ctx.beginPath();
+        if(randomX(1) > 0 ){
+            ctx.arc(0,-len,10,Math.PI/2,Math.PI);
+        }else{
+            ctx.arc(0,-len,10,0,Math.PI/2);
+        }
+        ctx.fill();
+        ctx.restore();
+        return;
+    }
+
+    if(currentStart < len){
+        ctx.lineTo(0, -(currentStart + options.step));
+        ctx.stroke();
+        requestAnimationFrame(()=>{
+            drawBranch(ctx, startX, startY, len, angle, branchWidth,false, currentStart + options.step);
+        });
+    }else{
+        requestAnimationFrame(()=>{
+            drawBranch(ctx, 0, -len, (len + randomX(options.lineRateRand)) * options.lineRate, -options.angelRate + randomX(options.angelRateRand), (branchWidth + randomX(options.branchWidthRateRand)) * options.branchWidthRate, true, 0);
+            // drawBranch(ctx, 0, -len, (len + randomX(options.lineRateRand)) * options.lineRate, options.angelRate + randomX(options.angelRateRand), (branchWidth + randomX(options.branchWidthRateRand)) * options.branchWidthRate, true, 0);
+        });
+    }
+    // ctx.restore();
+}
+
+var options = {
+    lineRate : 0.8,
+    lineRateRand : 1,
+    branchWidthRate : 0.8,
+    branchWidthRateRand : 1,
+    angelRate : 15,
+    angelRateRand : 2,
+    minLine : 3,
+    branchColor : 'darkgreen',
+    leafColor : 'green',
+    step : 1
+}
+
+var randomX = (n) => {
+    return Math.random() * 2 * n - n;
+}
